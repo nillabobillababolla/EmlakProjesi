@@ -5,11 +5,8 @@ using Emlak.Entity.ViewModels;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.Mail;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Helpers;
@@ -30,7 +27,10 @@ namespace Emlak.MVC.Controllers
         public async Task<ActionResult> Register(LoginAndRegisterViewModel model)
         {
             if (!ModelState.IsValid)
+            {
                 return View(model);
+            }
+
             var userManager = MembershipTools.NewUserManager();
             var checkUser = userManager.FindByName(model.Register.Name);
             if (checkUser != null)
@@ -71,7 +71,7 @@ namespace Emlak.MVC.Controllers
                         To = user.Email
                     });
                 }
-                
+
 
                 return RedirectToAction("Index", "Home");
             }
@@ -91,7 +91,10 @@ namespace Emlak.MVC.Controllers
         public async Task<ActionResult> Login(LoginAndRegisterViewModel model)
         {
             if (!ModelState.IsValid)
+            {
                 return View(model);
+            }
+
             var userManager = MembershipTools.NewUserManager();
             var user = await userManager.FindAsync(model.Login.Username, model.Login.Password);
             if (user == null)
@@ -140,7 +143,10 @@ namespace Emlak.MVC.Controllers
         public async Task<ActionResult> Profile(ProfileViewModel model)
         {
             if (!ModelState.IsValid)
+            {
                 return View(model);
+            }
+
             var userStore = MembershipTools.NewUserStore();
             var userManager = new UserManager<ApplicationUser>(userStore);
             var user = userManager.FindById(HttpContext.User.Identity.GetUserId());
@@ -192,7 +198,10 @@ namespace Emlak.MVC.Controllers
         public async Task<ActionResult> ChangePassword(ProfileViewModel model)
         {
             if (!ModelState.IsValid)
+            {
                 return RedirectToAction("Profile");
+            }
+
             var userStore = MembershipTools.NewUserStore();
             var userManager = new UserManager<ApplicationUser>(userStore);
             var user = userManager.FindById(HttpContext.User.Identity.GetUserId());
@@ -262,8 +271,9 @@ namespace Emlak.MVC.Controllers
                 return RedirectToAction("Login", "Account");
             }
             else
+            {
                 return View();
-
+            }
         }
         [HttpPost]
         public async Task<JsonResult> UploadAvatar()
@@ -339,9 +349,14 @@ namespace Emlak.MVC.Controllers
 
             userManager.RemoveFromRole(sonuc.Id, "Passive");
             if (string.IsNullOrEmpty(sonuc.PreRole))
+            {
                 userManager.AddToRole(sonuc.Id, "User");
+            }
             else
+            {
                 userManager.AddToRole(sonuc.Id, sonuc.PreRole);
+            }
+
             ViewBag.sonuc = $"Merhaba, {sonuc.UserName} Aktivasyon Başarılı.";
             await SiteSettings.SendMail(new MailModel()
             {
