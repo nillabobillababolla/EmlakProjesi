@@ -119,7 +119,7 @@ namespace Emlak.MVC.Controllers
         }
 
         [Authorize]
-        public ActionResult Profile()
+        public ActionResult ProfileAccount()
         {
             var userManager = MembershipTools.NewUserManager();
             var id = HttpContext.User.Identity.GetUserId();
@@ -140,7 +140,7 @@ namespace Emlak.MVC.Controllers
         [Authorize]
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public async Task<ActionResult> Profile(ProfileViewModel model)
+        public async Task<ActionResult> ProfileAccount(ProfileViewModel model)
         {
             if (!ModelState.IsValid)
             {
